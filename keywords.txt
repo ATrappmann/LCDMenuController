@@ -1,0 +1,45 @@
+#######################################
+# Syntax Coloring Map For LCDMenuController
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Menu	KEYWORD1
+LCDMenuController	KEYWORD1
+menuFuncPtr	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+validate	KEYWORD2
+init	KEYWORD2
+begin	KEYWORD2
+navigate	KEYWORD2
+showMenu	KEYWORD2
+calcMaxMenuDepth	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+display	LITERAL1
+
+MCP23017_PA0	LITERAL1
+MCP23017_PA1	LITERAL1
+MCP23017_PA2	LITERAL1
+MCP23017_PA3	LITERAL1
+MCP23017_PA4	LITERAL1
+MCP23017_PA5	LITERAL1
+MCP23017_PA6	LITERAL1
+MCP23017_PA7	LITERAL1
+MCP23017_PB0	LITERAL1
+MCP23017_PB1	LITERAL1
+MCP23017_PB2	LITERAL1
+MCP23017_PB3	LITERAL1
+MCP23017_PB4	LITERAL1
+MCP23017_PB5	LITERAL1
+MCP23017_PB6	LITERAL1
+MCP23017_PB7	LITERAL1

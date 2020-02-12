@@ -1,0 +1,20 @@
+{
+	"name": "LCDMenuController",
+	"frameworks": "Arduino",
+	"keywords": "Menu LiquidCrystal LCD",
+	"description": "Arduino library for controlling simple menus on an LCD.",
+	"authors":
+	[
+		{
+			"name": "Andreas Trappmann",
+			"email": "andreas.trappmann@t-online.de",
+			"url": "https://github.com/ATrappmann/LCDMenuController",
+			"maintainer": true
+		}
+	],
+	"repository":
+	{
+		"type": "git",
+		"url": "https://github.com/ATrappmann/LCDMenuController"
+	}
+}
