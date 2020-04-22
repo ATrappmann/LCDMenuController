@@ -29,8 +29,11 @@
 
 menuFuncPtr sub31Func() { Serial.println("sub31Func"); return NULL; }
 menuFuncPtr sub1Func()  { Serial.println("sub1Func"); return NULL; }
+
+// continues callback function until BACK is pressed
 menuFuncPtr contFunc()  { Serial.println("contFunc"); return contFunc; }
 menuFuncPtr sub2Func()  { Serial.println("sub2Func"); return contFunc; }
+
 menuFuncPtr mainFunc2() { Serial.println("mainFunc2"); return NULL; }
 
 Menu sub31Menu[] = {
@@ -50,6 +53,7 @@ Menu sub3Menu[] = {
 };
 
 Menu mainMenu[] = {
+  { "Headline", NULL, NULL },
   { "Entry1", NULL, sub1Menu },
   { "Entry2", mainFunc2, NULL },
   { "Entry3", NULL, sub3Menu },

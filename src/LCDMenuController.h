@@ -1,15 +1,15 @@
 // NAME: LCDMenuController.h
 //
-// DESC: This is an Arduino library to control simple button controlled menus on an LCD display.
-// The Menu structure defines the content of the menus and submenus. The LCDMenuController class
-// handles the navigation with up & down buttons and a select and back button.
+// DESC: LCDMenuController is an Arduino library to control menu selection on a Liquid Crystal Display.
+//	     Menu navigation is controlled by 4 push button switches. 
+//
+// VERSION: This is Version 1.1 of the library.
+//
+// SOURCE: Code is available at https://github.com/ATrappmann/LCDMenuController
 //
 // DEPENDENCIES:
 // * LiquidCrystal_MCP23017_I2C library from https://github.com/ATrappmann/LiquidCrystal_MCP23017_I2C
 // * Bounce2 library from https://github.com/thomasfredericks/Bounce2
-//
-// This file is part of the LCDMenuController library for the Arduino environment.
-// https://github.com/ATrappmann/LCDMenuController
 //
 // MIT License
 //
@@ -59,7 +59,7 @@ private:
   LiquidCrystal_MCP23017_I2C *display;
   uint8_t displayWidth;
   uint8_t displayHeight;
-
+  
   Bounce *nextButton;
   Bounce *prevButton;
   Bounce *selectButton;
@@ -74,14 +74,14 @@ private:
   menuFuncPtr (*contFunc)(const LCDMenuController *);
 
   bool  started;
-
+  
 public:
   LCDMenuController(const LiquidCrystal_MCP23017_I2C *lcd, const uint8_t lcdCols, const uint8_t lcdRows,
-                 const int nextButtonPin, const int prevButtonPin,
+                 const int nextButtonPin, const int prevButtonPin, 
                  const int selectButtonPin, const int backButtonPin);
 
   ~LCDMenuController();
-
+  
 #ifdef DEBUG
   static bool validate(const Menu menu[]);
 #endif
@@ -94,13 +94,13 @@ public:
   bool isPrevButtonPressed();
   bool isSelectButtonPressed();
   bool isBackButtonPressed();
-
+  
   inline LiquidCrystal_MCP23017_I2C *getDisplay() { return display; }
-
+  
 private:
   void showMenu(const Menu menu[]);
   int  calcMaxMenuDepth(const Menu menu[]);
-
+  
 };
 
 #endif /* LCDMENUCONTROLLER_H */

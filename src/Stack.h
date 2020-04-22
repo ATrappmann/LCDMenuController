@@ -1,8 +1,9 @@
 // NAME: Stack.h
-//
+// 
 // DESC: Simple stack implementation.
 //
 // This file is part of the LCDMenuController library for the Arduino environment.
+// SOURCE: Code is available at https://github.com/ATrappmann/LCDMenuController
 //
 #ifndef STACK_H
 #define STACK_H
@@ -13,14 +14,14 @@ private:
   int maxSize;
   T   **stack;
   int stackPtr;
-
+  
 public:
   Stack(const int stackSize) {
     maxSize = stackSize;
     stack = new T*[maxSize];
     stackPtr = 0;
   }
-
+  
   virtual ~Stack() {
     delete[] stack;
     stack = NULL;
@@ -31,10 +32,10 @@ public:
       stack[stackPtr++] = obj;
     }
   }
-
-  T* pop() {
+  
+  T* pop() { 
     if (stackPtr > 0) {
-      return stack[--stackPtr];
+      return stack[--stackPtr];      
     }
     else return NULL;
   }
@@ -42,7 +43,7 @@ public:
   int getMaxSize() {
     return maxSize;
   }
-
+  
 };
 
 #endif /* STACK_H */
