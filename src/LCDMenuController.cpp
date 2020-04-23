@@ -1,7 +1,7 @@
 // NAME: LCDMenuController.cpp
 //
 // DESC: LCDMenuController is an Arduino library to control menu selection on a Liquid Crystal Display.
-//	     Menu navigation is controlled by 4 push button switches. 
+//	     Menu navigation is controlled by 4 push button switches.
 //
 // VERSION: This is Version 1.1 of the library.
 //
@@ -34,12 +34,12 @@
 // SOFTWARE.
 //
 
-//#define DEBUG 1
+#define DEBUG 1
 #include "Debug.h"
 
 #include "LCDMenuController.h"
 
-uint8_t arrow[8] = {  
+uint8_t arrow[8] = {
   B00000,
   B00100,
   B00010,
@@ -52,7 +52,7 @@ uint8_t arrow[8] = {
 #define MARKER  1
 
 LCDMenuController::LCDMenuController(const LiquidCrystal_MCP23017_I2C *lcd, const uint8_t lcdCols, const uint8_t lcdRows,
-                               const int nextButtonPin, const int prevButtonPin, 
+                               const int nextButtonPin, const int prevButtonPin,
                                const int selectButtonPin, const int backButtonPin) {
   display = lcd;
   displayWidth = lcdCols;
@@ -61,18 +61,18 @@ LCDMenuController::LCDMenuController(const LiquidCrystal_MCP23017_I2C *lcd, cons
   nextButton = new Bounce();
   nextButton->attach(nextButtonPin, INPUT_PULLUP);
   nextButton->interval(10);  // ms
-  
+
   prevButton = new Bounce();
   prevButton->attach(prevButtonPin, INPUT_PULLUP);
   prevButton->interval(10);  // ms
-  
+
   selectButton = new Bounce();
   selectButton->attach(selectButtonPin, INPUT_PULLUP);
   selectButton->interval(10);  // ms
-  
+
   backButton = new Bounce();
   backButton->attach(backButtonPin, INPUT_PULLUP);
-  backButton->interval(10);  // ms  
+  backButton->interval(10);  // ms
 
   menuStack = NULL;
   started = false;
@@ -94,7 +94,7 @@ bool LCDMenuController::validate(const Menu menu[]) {
   while (NULL != menu[i].name) {
     if (NULL == menu[i].func) {
       if (NULL == menu[i].submenu) return false;
-      if (!validate(menu[i].submenu)) return false;   
+      if (!validate(menu[i].submenu)) return false;
     }
     i++;
   }
@@ -118,7 +118,7 @@ int LCDMenuController::calcMaxMenuDepth(const Menu menu[]) {
 
 void LCDMenuController::init() {
   SEROUT(F("InitMenu\n"));
-  display->begin(displayWidth, displayHeight);                                
+  display->begin(displayWidth, displayHeight);
   display->createChar(MARKER, arrow);
   display->backlight();
 }
@@ -143,15 +143,15 @@ void LCDMenuController::begin(const Menu menu[]) {
 #endif
 
   this->menu = NULL;
-  showMenu(menu);  
+  showMenu(menu);
   started = true;
 }
 
 void LCDMenuController::showMenu(const Menu menu[]) {
   SEROUT(F("-----------------\n"));
-  SEROUT(F("ShowMenu=") << (uint16_t)menu << LF);	
+  SEROUT(F("ShowMenu=") << (uint16_t)menu << LF);
   if (NULL == menu) return;
-  
+
   if (menu != this->menu) {	// new (sub-)menu
 	this->menu = menu;
     this->contFunc = NULL;
@@ -166,7 +166,7 @@ void LCDMenuController::showMenu(const Menu menu[]) {
 	}
 	topEntryNo = 0;
   }
-  
+
   int startNo;
   if (currentEntryNo - topEntryNo < 0) {
     startNo = currentEntryNo;
@@ -179,24 +179,27 @@ void LCDMenuController::showMenu(const Menu menu[]) {
     startNo = currentEntryNo - displayHeight + 1;
     topEntryNo = startNo;
   }
-  
+
   SEROUT(F("Current=") << currentEntryNo << F(", Top=") << topEntryNo << F(", Start=") << startNo << LF);
-    
+
   display->clear();
   for (int i=startNo; i<numEntries && i<startNo+displayHeight; i++) {
     SEROUT(i-startNo << ": ");
     display->setCursor(0, i-startNo);
     if (currentEntryNo == i) {
       SEROUT("*");
-      display->write(MARKER); 
-    } else if ((NULL != menu[i].func) || (NULL != menu[i].submenu)) {	// check for headline
+      display->write(MARKER);
+    } else if ((NULL != menu[i].func) || (NULL != menu[i].submenu)) {	// check for not an headline
       SEROUT(" ");
       display->write(' ');
     }
-	if ((NULL != menu[i].func) || (NULL != menu[i].submenu)) {	// check for headline
-	  SEROUT(" " << menu[i].name << LF);
-	  display->write(' ');
-	}
+    /*
+	  if ((NULL != menu[i].func) || (NULL != menu[i].submenu)) {	// check for not an headline
+	    SEROUT(" ");
+	    display->write(' ');
+	  }
+    */
+    SEROUT(menu[i].name << LF);
     display->print(menu[i].name);
   }
 }
@@ -218,16 +221,20 @@ void LCDMenuController::navigate() {
   }
 
   if (NULL != contFunc) {
-	SEROUT("call func : " << (uint16_t)contFunc << LF);
+	  SEROUT("call func : " << (uint16_t)contFunc << LF);
     menuFuncPtr callback = contFunc(this);	// call given function
-	SEROUT("return val: " << (uint16_t)callback << LF);
+	  SEROUT("return val: " << (uint16_t)callback << LF);
     if (callback != contFunc) {
       contFunc = callback;
-	  if (NULL == callback)	return showMenu(menu);
+	    if (NULL == callback)	{
+        Menu *prevMenu = menuStack->pop();
+        SEROUT("pop: " << ((uint16_t)prevMenu) << LF);
+        return showMenu(prevMenu);
+      }
     }
-	else return;	// continue calling the given function
+	  else return;	// continue calling the given function
   }
-  
+
   nextButton->update();
   if (nextButton->fell()) {
 	currentEntryNo++;
@@ -244,11 +251,11 @@ void LCDMenuController::navigate() {
   if (prevButton->fell()) {
 	currentEntryNo--;
 	if ((NULL == menu[currentEntryNo].func) && (NULL == menu[currentEntryNo].submenu)) {
-	  topEntryNo--; 
+	  topEntryNo--;
 	  if (topEntryNo < 0) topEntryNo = 0;
 	  currentEntryNo++;
 	}
-	
+
     if (currentEntryNo < 0) {
       currentEntryNo = 0;
     }
@@ -259,15 +266,14 @@ void LCDMenuController::navigate() {
 
   selectButton->update();
   if (selectButton->fell()) {
-    SEROUT("SelectButton - ");
+    SEROUT(F("SelectButton - push: ") << ((uint16_t)menu) << LF);
+    menuStack->push(menu);
     if (NULL != menu[currentEntryNo].func) {
       contFunc = menu[currentEntryNo].func;
-      SEROUT("contFunc: " << ((uint16_t)contFunc) << LF);      
+      SEROUT(F("contFunc: ") << ((uint16_t)contFunc) << LF);
     }
     else if (NULL != menu[currentEntryNo].submenu) {
-      SEROUT("showSubMenu: " << ((uint16_t)menu[currentEntryNo].submenu) << LF);
-      SEROUT("push: " << ((uint16_t)menu) << LF);	
-  	  menuStack->push(menu);
+      SEROUT(F("showSubMenu: ") << ((uint16_t)menu[currentEntryNo].submenu) << LF);
       showMenu(menu[currentEntryNo].submenu);
     }
     return;
@@ -293,4 +299,3 @@ bool LCDMenuController::isBackButtonPressed() {
 	backButton->update();
 	return backButton->fell();
 }
-

@@ -1,7 +1,7 @@
 // NAME: LCDMenuController.h
 //
 // DESC: LCDMenuController is an Arduino library to control menu selection on a Liquid Crystal Display.
-//	     Menu navigation is controlled by 4 push button switches. 
+//	     Menu navigation is controlled by 4 push button switches.
 //
 // VERSION: This is Version 1.1 of the library.
 //
@@ -50,16 +50,21 @@ typedef void * (*menuFuncPtr)();
  */
 struct Menu {
   char       	*name;			// name of menu entry, text to show on display
-  menuFuncPtr  (*func)();		// function to call, when menu entry is selected
+  menuFuncPtr(*func)();		// function to call, when menu entry is selected
   Menu       	*submenu;		// submenu to show, when menu entry is selected
 };
+
+#define HEADLINE(title)       { title, NULL, NULL }
+#define FUNCCALL(title,func)  { title, func, NULL }
+#define SUBMENU(title,menu)   { title, NULL, menu }
+#define ENDOFMENU()           { NULL }
 
 class LCDMenuController {
 private:
   LiquidCrystal_MCP23017_I2C *display;
   uint8_t displayWidth;
   uint8_t displayHeight;
-  
+
   Bounce *nextButton;
   Bounce *prevButton;
   Bounce *selectButton;
@@ -74,14 +79,14 @@ private:
   menuFuncPtr (*contFunc)(const LCDMenuController *);
 
   bool  started;
-  
+
 public:
   LCDMenuController(const LiquidCrystal_MCP23017_I2C *lcd, const uint8_t lcdCols, const uint8_t lcdRows,
-                 const int nextButtonPin, const int prevButtonPin, 
+                 const int nextButtonPin, const int prevButtonPin,
                  const int selectButtonPin, const int backButtonPin);
 
   ~LCDMenuController();
-  
+
 #ifdef DEBUG
   static bool validate(const Menu menu[]);
 #endif
@@ -94,13 +99,13 @@ public:
   bool isPrevButtonPressed();
   bool isSelectButtonPressed();
   bool isBackButtonPressed();
-  
+
   inline LiquidCrystal_MCP23017_I2C *getDisplay() { return display; }
-  
+
 private:
   void showMenu(const Menu menu[]);
   int  calcMaxMenuDepth(const Menu menu[]);
-  
+
 };
 
 #endif /* LCDMENUCONTROLLER_H */
