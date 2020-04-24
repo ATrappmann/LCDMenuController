@@ -39,7 +39,7 @@
 
 #include "LCDMenuController.h"
 
-uint8_t arrow[8] = {
+uint8_t arrow[8] = {  // used for submenus
   B00000,
   B00100,
   B00010,
@@ -49,7 +49,7 @@ uint8_t arrow[8] = {
   B00100,
   B00000
 };
-#define MARKER  1
+#define SUBMENU_MARKER  1
 
 LCDMenuController::LCDMenuController(const LiquidCrystal_MCP23017_I2C *lcd, const uint8_t lcdCols, const uint8_t lcdRows,
                                const int nextButtonPin, const int prevButtonPin,
@@ -119,7 +119,7 @@ int LCDMenuController::calcMaxMenuDepth(const Menu menu[]) {
 void LCDMenuController::init() {
   SEROUT(F("InitMenu\n"));
   display->begin(displayWidth, displayHeight);
-  display->createChar(MARKER, arrow);
+  display->createChar(SUBMENU_MARKER, arrow);
   display->backlight();
 }
 
@@ -187,18 +187,18 @@ void LCDMenuController::showMenu(const Menu menu[]) {
     SEROUT(i-startNo << ": ");
     display->setCursor(0, i-startNo);
     if (currentEntryNo == i) {
-      SEROUT("*");
-      display->write(MARKER);
-    } else if ((NULL != menu[i].func) || (NULL != menu[i].submenu)) {	// check for not an headline
-      SEROUT(" ");
+      if (NULL != menu[i].submenu) {  // submenu
+        SEROUT('>');
+        display->write(SUBMENU_MARKER);
+      }
+      else { // function calling
+        SEROUT('*');
+        display->write('*');
+      }
+    } else if ((NULL != menu[i].func) || (NULL != menu[i].submenu)) {	// print space, if not an headline
+      SEROUT(' ');
       display->write(' ');
     }
-    /*
-	  if ((NULL != menu[i].func) || (NULL != menu[i].submenu)) {	// check for not an headline
-	    SEROUT(" ");
-	    display->write(' ');
-	  }
-    */
     SEROUT(menu[i].name << LF);
     display->print(menu[i].name);
   }
