@@ -1,6 +1,7 @@
 # LCDMenuController
 
-This is an Arduino library to control simple button controlled menus on an LCD display.
+**LCDMenuController** is an Arduino library to control simple button controlled
+menus on a LiquidCrystal Display.
 
 ## Documentation
 
@@ -41,8 +42,8 @@ Menu mainMenu[] = {
 ```
 
 Define a **LCDMenuController** with its constructor and pass the LCD used,
-give the display size (16x2)
-and the pin numbers of the required push button switches like here:
+give the display size (16x2) and the pin numbers of the required push button
+switches like here:
 ```
 LCDMenuController controller = LCDMenuController(&lcd, 16, 2, DOWN_PIN, UP_PIN, SELECT_PIN, BACK_PIN);
 ```
@@ -71,6 +72,10 @@ All text above must be included in any redistribution
 
 ## Release Notes
 
+Version 1.2.1 - 27.04.2020
+
+	* Simplyfied the example.
+	
 Version 1.2 - 24.04.2020
 
   * Added different Markers for sub-menus and function calls
