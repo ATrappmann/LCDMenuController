@@ -1,15 +1,15 @@
 // NAME: LCDMenuController.h
 //
-// DESC: This is an Arduino library to control simple button controlled menus on an LCD display.
-// The Menu structure defines the content of the menus and submenus. The LCDMenuController class
-// handles the navigation with up & down buttons and a select and back button.
+// DESC: LCDMenuController is an Arduino library to control menu selection on a Liquid Crystal Display.
+//	     Menu navigation is controlled by 4 push button switches.
+//
+// VERSION: This is Version 1.1 of the library.
+//
+// SOURCE: Code is available at https://github.com/ATrappmann/LCDMenuController
 //
 // DEPENDENCIES:
 // * LiquidCrystal_MCP23017_I2C library from https://github.com/ATrappmann/LiquidCrystal_MCP23017_I2C
 // * Bounce2 library from https://github.com/thomasfredericks/Bounce2
-//
-// This file is part of the LCDMenuController library for the Arduino environment.
-// https://github.com/ATrappmann/LCDMenuController
 //
 // MIT License
 //
@@ -50,9 +50,14 @@ typedef void * (*menuFuncPtr)();
  */
 struct Menu {
   char       	*name;			// name of menu entry, text to show on display
-  menuFuncPtr  (*func)();		// function to call, when menu entry is selected
+  menuFuncPtr(*func)();		// function to call, when menu entry is selected
   Menu       	*submenu;		// submenu to show, when menu entry is selected
 };
+
+#define HEADLINE(title)       { title, NULL, NULL }
+#define FUNCCALL(title,func)  { title, func, NULL }
+#define SUBMENU(title,menu)   { title, NULL, menu }
+#define ENDOFMENU()           { NULL }
 
 class LCDMenuController {
 private:

@@ -4,6 +4,7 @@
 //       Printing must be enabled by a "#define DEBUG 1" before including this header.
 //
 // This file is part of the LCDMenuController library for the Arduino environment.
+// SOURCE: Code is available at https://github.com/ATrappmann/LCDMenuController
 //
 #ifndef DEBUG_H
 #define DEBUG_H

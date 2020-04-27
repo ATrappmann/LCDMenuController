@@ -15,33 +15,38 @@
 #define SELECT_PIN  7
 #define BACK_PIN    8
 
-menuFuncPtr sub31Func() { Serial.println("sub31Func"); return NULL; }
-menuFuncPtr sub1Func()  { Serial.println("sub1Func"); return NULL; }
-menuFuncPtr contFunc()  { Serial.println("contFunc"); return contFunc; }
-menuFuncPtr sub2Func()  { Serial.println("sub2Func"); return contFunc; }
-menuFuncPtr mainFunc2() { Serial.println("mainFunc2"); return NULL; }
+menuFuncPtr sub31Func(const LCDMenuController *) { Serial.println("sub31Func"); return NULL; }
+menuFuncPtr sub1Func(const LCDMenuController *)  { Serial.println("sub1Func"); return NULL; }
+
+// continues callback function until BACK is pressed
+menuFuncPtr contFunc(const LCDMenuController *)  { Serial.println("contFunc"); return contFunc; }
+menuFuncPtr sub2Func(const LCDMenuController *)  { Serial.println("sub2Func"); return contFunc; }
+
+menuFuncPtr mainFunc2(const LCDMenuController *) { Serial.println("mainFunc2"); return NULL; }
 
 Menu sub31Menu[] = {
-  { "Sub31", sub31Func, NULL },
-  NULL
+  FUNCCALL("Sub3.1", sub31Func),
+  ENDOFMENU()
 };
 
 Menu sub1Menu[] = {
-  { "Sub1", sub1Func, NULL },
-  { "Sub2", sub2Func, NULL },
-  NULL
+  FUNCCALL("Sub1", sub1Func),
+  FUNCCALL("Sub2", sub2Func),
+  ENDOFMENU()
 };
 
 Menu sub3Menu[] = {
-  { "Sub3", NULL, sub31Menu },
-  NULL
+  SUBMENU("Sub3", sub31Menu),
+  ENDOFMENU()
 };
 
+
 Menu mainMenu[] = {
-  { "Entry1", NULL, sub1Menu },
-  { "Entry2", mainFunc2, NULL },
-  { "Entry3", NULL, sub3Menu },
-  NULL
+  HEADLINE("Headline"),
+  SUBMENU ("Entry1", sub1Menu),
+  FUNCCALL("Entry2", mainFunc2),
+  SUBMENU ("Entry3", sub3Menu),
+  ENDOFMENU()
 };
 
 LiquidCrystal_MCP23017_I2C lcd = LiquidCrystal_MCP23017_I2C(LCD_I2C_ADDR);
