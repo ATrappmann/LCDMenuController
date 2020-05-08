@@ -77,7 +77,9 @@ private:
 
   Stack<Menu> *menuStack;
   menuFuncPtr (*contFunc)(const LCDMenuController *);
-
+  menuFuncPtr (*enterFunc)(const LCDMenuController *);
+  menuFuncPtr (*exitFunc)(const LCDMenuController *);
+  
   bool  started;
 
 public:
@@ -94,6 +96,9 @@ public:
   void init();
   void begin(const Menu menu[]);
   void navigate();
+
+  void callOnEnterMenu(menuFuncPtr callback);
+  void callOnExitMenu(menuFuncPtr callback);
 
   bool isNextButtonPressed();
   bool isPrevButtonPressed();

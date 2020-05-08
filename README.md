@@ -72,10 +72,14 @@ All text above must be included in any redistribution
 
 ## Release Notes
 
+Version 1.2.2 - 08.05.2020
+
+  * Added callback functions on enter & exit menus
+  
 Version 1.2.1 - 27.04.2020
 
 	* Simplyfied the example.
-	
+
 Version 1.2 - 24.04.2020
 
   * Added different Markers for sub-menus and function calls

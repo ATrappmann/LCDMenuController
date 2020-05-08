@@ -76,6 +76,9 @@ LCDMenuController::LCDMenuController(const LiquidCrystal_MCP23017_I2C *lcd, cons
 
   menuStack = NULL;
   started = false;
+
+  enterFunc = NULL;
+  exitFunc = NULL;
 }
 
 LCDMenuController::~LCDMenuController() {
@@ -153,18 +156,18 @@ void LCDMenuController::showMenu(const Menu menu[]) {
   if (NULL == menu) return;
 
   if (menu != this->menu) {	// new (sub-)menu
-	this->menu = menu;
+	  this->menu = menu;
     this->contFunc = NULL;
 
-	numEntries = 0;
-	currentEntryNo = 0;
-	while (NULL != menu[numEntries].name) {
-	  if ((0 == currentEntryNo) && ((NULL != menu[numEntries].func) || (NULL != menu[numEntries].submenu))) {
-		currentEntryNo = numEntries;
+	  numEntries = 0;
+	  currentEntryNo = 0;
+	  while (NULL != menu[numEntries].name) {
+	    if ((0 == currentEntryNo) && ((NULL != menu[numEntries].func) || (NULL != menu[numEntries].submenu))) {
+		    currentEntryNo = numEntries;
+	    }
+	    numEntries++;
 	  }
-	  numEntries++;
-	}
-	topEntryNo = 0;
+	  topEntryNo = 0;
   }
 
   int startNo;
@@ -211,6 +214,9 @@ void LCDMenuController::navigate() {
   if (backButton->fell()) {
     SEROUT("BackButton\n");
     contFunc = NULL;
+    if (NULL != exitFunc) {
+      exitFunc(this);
+    }
     Menu *prevMenu = menuStack->pop();
     SEROUT("pop: " << ((uint16_t)prevMenu) << LF);
     if (NULL != prevMenu) {
@@ -267,6 +273,9 @@ void LCDMenuController::navigate() {
   selectButton->update();
   if (selectButton->fell()) {
     SEROUT(F("SelectButton - push: ") << ((uint16_t)menu) << LF);
+    if (NULL != enterFunc) {
+      enterFunc(this);
+    }
     menuStack->push(menu);
     if (NULL != menu[currentEntryNo].func) {
       contFunc = menu[currentEntryNo].func;
@@ -278,6 +287,14 @@ void LCDMenuController::navigate() {
     }
     return;
   }
+}
+
+void LCDMenuController::callOnEnterMenu(menuFuncPtr callback) {
+  enterFunc = callback;
+}
+
+void LCDMenuController::callOnExitMenu(menuFuncPtr callback) {
+  exitFunc = callback;
 }
 
 bool LCDMenuController::isNextButtonPressed() {
