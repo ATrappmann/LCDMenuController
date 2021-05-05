@@ -49,7 +49,7 @@ Menu mainMenu[] = {
   ENDOFMENU()
 };
 
-LiquidCrystal_MCP23017_I2C lcd = LiquidCrystal_MCP23017_I2C(LCD_I2C_ADDR);
+LCD lcd = LCD(LCD_I2C_ADDR, 16, 2);
 LCDMenuController controller = LCDMenuController(&lcd, 16, 2, DOWN_PIN, UP_PIN, SELECT_PIN, BACK_PIN);
 
 void setup() {

@@ -51,7 +51,7 @@ uint8_t arrow[8] = {  // used for submenus
 };
 #define SUBMENU_MARKER  1
 
-LCDMenuController::LCDMenuController(const LiquidCrystal_MCP23017_I2C *lcd, const uint8_t lcdCols, const uint8_t lcdRows,
+LCDMenuController::LCDMenuController(const LCD *lcd, const uint8_t lcdCols, const uint8_t lcdRows,
                                const int nextButtonPin, const int prevButtonPin,
                                const int selectButtonPin, const int backButtonPin) {
   display = lcd;

@@ -36,7 +36,13 @@
 #ifndef LCDMENUCONTROLLER_H
 #define LCDMENUCONTROLLER_H
 
+#ifdef USE_MCP23017_LCD
 #include <LiquidCrystal_MCP23017_I2C.h>
+typedef LiquidCrystal_MCP23017_I2C LCD;
+#else
+#include <LiquidCrystal_I2C.h>
+typedef LiquidCrystal_I2C LCD;
+#endif
 #include <Bounce2.h>
 #include "Stack.h"
 
@@ -61,7 +67,7 @@ struct Menu {
 
 class LCDMenuController {
 private:
-  LiquidCrystal_MCP23017_I2C *display;
+  LCD *display;
   uint8_t displayWidth;
   uint8_t displayHeight;
 
@@ -83,7 +89,7 @@ private:
   bool  started;
 
 public:
-  LCDMenuController(const LiquidCrystal_MCP23017_I2C *lcd, const uint8_t lcdCols, const uint8_t lcdRows,
+  LCDMenuController(const LCD *lcd, const uint8_t lcdCols, const uint8_t lcdRows,
                  const int nextButtonPin, const int prevButtonPin,
                  const int selectButtonPin, const int backButtonPin);
 
@@ -105,7 +111,7 @@ public:
   bool isSelectButtonPressed();
   bool isBackButtonPressed();
 
-  inline LiquidCrystal_MCP23017_I2C *getDisplay() { return display; }
+  inline LCD *getDisplay() { return display; }
 
 private:
   void showMenu(const Menu menu[]);

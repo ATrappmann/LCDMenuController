@@ -72,6 +72,11 @@ All text above must be included in any redistribution
 
 ## Release Notes
 
+Version 1.2.3 - 05.05.2021
+
+  * Seperated implementation of `LiquidCrystal_MCP23017_I2C` from `LiquidCrystal_I2C`
+    and made them both compatible with this library
+
 Version 1.2.2 - 08.05.2020
 
   * Added callback functions on enter & exit menus
