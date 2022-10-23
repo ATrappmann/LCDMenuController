@@ -3,7 +3,7 @@
 // DESC: LCDMenuController is an Arduino library to control menu selection on a Liquid Crystal Display.
 //	     Menu navigation is controlled by 4 push button switches.
 //
-// VERSION: This is Version 1.1 of the library.
+// VERSION: This is Version 1.2.5 of the library.
 //
 // SOURCE: Code is available at https://github.com/ATrappmann/LCDMenuController
 //
@@ -13,7 +13,7 @@
 //
 // MIT License
 //
-// Copyright (c) 2020 Andreas Trappmann
+// Copyright (c) 2020-22 Andreas Trappmann
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,8 @@
 //
 #ifndef LCDMENUCONTROLLER_H
 #define LCDMENUCONTROLLER_H
+
+#define INCLUDE_VALIDATE 1
 
 #ifdef USE_MCP23017_LCD
 #include <LiquidCrystal_MCP23017_I2C.h>
@@ -85,7 +87,7 @@ private:
   menuFuncPtr (*contFunc)(const LCDMenuController *);
   menuFuncPtr (*enterFunc)(const LCDMenuController *);
   menuFuncPtr (*exitFunc)(const LCDMenuController *);
-  
+
   bool  started;
 
 public:
@@ -95,7 +97,7 @@ public:
 
   ~LCDMenuController();
 
-#ifdef DEBUG
+#ifdef INCLUDE_VALIDATE
   static bool validate(const Menu menu[]);
 #endif
 

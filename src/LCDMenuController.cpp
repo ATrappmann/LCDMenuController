@@ -3,7 +3,7 @@
 // DESC: LCDMenuController is an Arduino library to control menu selection on a Liquid Crystal Display.
 //	     Menu navigation is controlled by 4 push button switches.
 //
-// VERSION: This is Version 1.1 of the library.
+// VERSION: This is Version 1.2.5 of the library.
 //
 // SOURCE: Code is available at https://github.com/ATrappmann/LCDMenuController
 //
@@ -13,7 +13,7 @@
 //
 // MIT License
 //
-// Copyright (c) 2020 Andreas Trappmann
+// Copyright (c) 2020-22 Andreas Trappmann
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@
 // SOFTWARE.
 //
 
-#define DEBUG 1
+//#define DEBUG 1
 #include "Debug.h"
 
 #include "LCDMenuController.h"
@@ -90,13 +90,18 @@ LCDMenuController::~LCDMenuController() {
   if (NULL != menuStack) { delete menuStack; menuStack = NULL; }
 }
 
-#ifdef DEBUG
+#ifdef INCLUDE_VALIDATE
 bool LCDMenuController::validate(const Menu menu[]) {
-  if (NULL == menu) return false;
+  if (NULL == menu) { Serial.println(F("ERROR in LCDMenuController::validate - menu is NULL")); return false; }
   int i = 0;
-  while (NULL != menu[i].name) {
-    if (NULL == menu[i].func) {
-      if (NULL == menu[i].submenu) return false;
+  while (NULL != menu[i].name) { // iterate until end of array
+    if (NULL != menu[i].submenu) {
+      if (NULL != menu[i].func) {
+        Serial.print(F("ERROR in LCDMenuController::validate - item #"));
+        Serial.print(i);
+        Serial.println(F(" - cannot be menu AND func"));
+        return false;
+      }
       if (!validate(menu[i].submenu)) return false;
     }
     i++;

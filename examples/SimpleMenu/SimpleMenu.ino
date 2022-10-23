@@ -8,6 +8,8 @@
 //
 #include "LCDMenuController.h"
 
+#define DEBUG 1
+
 #define LCD_I2C_ADDR  0x20
 
 #define UP_PIN      5
@@ -54,9 +56,11 @@ LCDMenuController controller = LCDMenuController(&lcd, 16, 2, DOWN_PIN, UP_PIN, 
 
 void setup() {
   Serial.begin(115200);
+  while (!Serial); // wait
   Serial.println("MenuLibrary uploaded " __DATE__ " " __TIME__);
 
 #ifdef DEBUG
+  Serial.print("Validating menus... "); Serial.flush();
   if (!controller.validate(mainMenu)) {
     Serial.println("ERROR: Validating 'mainMenu' failed!");
     Serial.println("Exit.");
@@ -64,6 +68,7 @@ void setup() {
     Serial.end();
     exit(-1);
   }
+  Serial.println("OK");
 #endif
 
   controller.init();
