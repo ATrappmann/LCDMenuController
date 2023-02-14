@@ -6,11 +6,14 @@
 // * MCP23017_LiquidCrystal_I2C library from https://github.com/ATrappmann/LiquidCrystal_MCP23017_I2C
 // * Bounce2 library from https://github.com/thomasfredericks/Bounce2
 //
+
+#define DEBUG 1
 #include "LCDMenuController.h"
 
 #define DEBUG 1
 
 #define LCD_I2C_ADDR  0x20
+LCD lcd = LCD(LCD_I2C_ADDR, 16, 2);
 
 #define UP_PIN      5
 #define DOWN_PIN    6
@@ -24,7 +27,24 @@ menuFuncPtr sub1Func(const LCDMenuController *)  { Serial.println("sub1Func"); r
 menuFuncPtr contFunc(const LCDMenuController *)  { Serial.println("contFunc"); return contFunc; }
 menuFuncPtr sub2Func(const LCDMenuController *)  { Serial.println("sub2Func"); return contFunc; }
 
-menuFuncPtr mainFunc2(const LCDMenuController *) { Serial.println("mainFunc2"); return NULL; }
+menuFuncPtr new1Func(const LCDMenuController *) { Serial.println("New Func1"); return NULL; }
+
+Menu newMenu[] = {
+  HEADLINE("New Menu"),
+  FUNCCALL("NewFunc1", new1Func),
+  ENDOFMENU()
+};
+
+menuFuncPtr mainFunc2(const LCDMenuController *) { Serial.println("mainFunc2"); //return NULL; }
+  LCDMenuController controller2 = LCDMenuController(&lcd, 16, 2, DOWN_PIN, UP_PIN, SELECT_PIN, BACK_PIN);
+  controller2.init();
+  controller2.begin(newMenu);
+  while (!controller2.isBackButtonPressed()) {
+    controller2.navigate();
+  }
+
+  return NULL;
+}
 
 Menu sub31Menu[] = {
   FUNCCALL("Sub3.1", sub31Func),
@@ -51,7 +71,6 @@ Menu mainMenu[] = {
   ENDOFMENU()
 };
 
-LCD lcd = LCD(LCD_I2C_ADDR, 16, 2);
 LCDMenuController controller = LCDMenuController(&lcd, 16, 2, DOWN_PIN, UP_PIN, SELECT_PIN, BACK_PIN);
 
 void setup() {

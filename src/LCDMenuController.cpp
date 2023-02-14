@@ -34,8 +34,8 @@
 // SOFTWARE.
 //
 
-//#define DEBUG 1
-#include "Debug.h"
+#define DEBUG 1
+//#include "Debug.h"
 
 #include "LCDMenuController.h"
 
